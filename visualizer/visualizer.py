@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 import subprocess
 import pandas as pd
+import sys
 
 # data = pd.read_csv("./data.csv")
 # print(list(data['km']))
@@ -12,23 +13,29 @@ def predict(mileage, p0, p1):
 def draw_lr(process, x, y):
     plt.ion()
     fig, ax = plt.subplots()
-
+    
     for line in process.stdout:
         words = line.split(" ")
         p0 = float(words[0])
         p1 = float(words[1])
         ax.clear()
 
+        ax.set_title("Car price prediction by mileage")
+        ax.set_xlabel("Mileage")
+        ax.set_ylabel("Price")
+
         xlr = [0, 1]
         ylr = [predict(0, p0, p1), predict(1, p0, p1)]
-        ax.text(0.75, 0.75, f"Mean error: {float(words[2]):.4f}")
-        ax.plot(xlr, ylr)
-        ax.scatter(x, y)
+        ax.text(0.75, 0.75, f"Mean square error: {float(words[2]):.4f}")
+        ax.plot(xlr, ylr, color="orange", label="Prediction")
+        ax.scatter(x, y, color="cadetblue", label="Real data")
+        
+        ax.legend(loc="upper right")
         plt.pause(0.01)
         print(line, end="")
 
     process.wait()  
-
+    print("Done")
     plt.ioff()
     plt.show()
 
@@ -48,14 +55,22 @@ def main():
             0.82758623, 0.8415948, 0.9353448, 0.9353448, 0.9353448, 1.0,
         ]
 
-    process = subprocess.Popen(
-        ["./linear_regression"],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        text=True
-    )
+    try:
+        process = subprocess.Popen(
+            ["./linear_regression"],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True
+        )
+    except:
+        print("Error: failed to open tranning program, make sure you put your linear_regression at the same dir.")
+        sys.exit(1)
 
-    draw_lr(process, mileages, prices)
+    try:
+        draw_lr(process, mileages, prices)
+    except Exception as e:
+        print("Error: ", e)
+        sys.exit(1)
 
 
 if __name__ == "__main__":
