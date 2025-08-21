@@ -135,7 +135,13 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let mut mileages: Vec<f32> = vec![];
     let mut prices: Vec<f32> = vec![];
 
-    let mut datacsv = Reader::from_path("data.csv")?;
+    let args : Vec<String> = std::env::args().collect();
+
+    if args.len() != 2 {
+        return Err("Invalid number of arguments, usage: linear_regression data.csv".into());
+    }
+
+    let mut datacsv = Reader::from_path(&args[1])?;
 
     for data in datacsv.records() {
         let info = data?;

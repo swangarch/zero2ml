@@ -3,7 +3,6 @@ import subprocess
 import pandas as pd
 import sys
 
-
 def predict(mileage, p0, p1):
     return p0 + mileage * p1
 
@@ -23,7 +22,7 @@ def draw_lr(process, x, y):
 
         xlr = [min(x), max(x)]
         ylr = [predict(min(x), theta0, theta1), predict(max(x), theta0, theta1)]
-        ax.text(0.75, 0.75, f"Mean square error: {float(words[2]):.4f}")
+        ax.text(0.8, 0.8, f"NMSE: {float(words[2]):.4f}", transform=ax.transAxes)
         ax.plot(xlr, ylr, color="orange", label="Prediction")
         ax.scatter(x, y, color="cadetblue", label="Real data")
         
@@ -36,23 +35,31 @@ def draw_lr(process, x, y):
     plt.ioff()
     plt.show()
 
-
 def main():
 
-    data = pd.read_csv("./data.csv")
+    args = sys.argv
+    if len(args) != 3:
+        print("Error: Wrong argv number usage: <path linear_regression_program> <data data.csv>")
+        sys.exit(1)
 
-    mileages = list(data['km'])
-    prices = list(data['price'])
+    try:
+        data = pd.read_csv(args[2])
+
+        mileages = list(data['km'])
+        prices = list(data['price'])
+    except Exception as e:
+        print("Error: Failed to read training data.", e)
+        sys.exit(1)
 
     try:
         process = subprocess.Popen(
-            ["./linear_regression"],
+            [args[1], args[2]],
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             text=True
         )
     except:
-        print("Error: failed to open tranning program, make sure you put your linear_regression at the same dir.")
+        print("Error: Failed to open tranning program, make sure you use right linear_regression.")
         sys.exit(1)
 
     try:
