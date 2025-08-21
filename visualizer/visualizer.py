@@ -3,9 +3,6 @@ import subprocess
 import pandas as pd
 import sys
 
-# data = pd.read_csv("./data.csv")
-# print(list(data['km']))
-# print(list(data['price']))
 
 def predict(mileage, p0, p1):
     return p0 + mileage * p1
@@ -16,16 +13,16 @@ def draw_lr(process, x, y):
     
     for line in process.stdout:
         words = line.split(" ")
-        p0 = float(words[0])
-        p1 = float(words[1])
+        theta0 = float(words[0])
+        theta1 = float(words[1])
         ax.clear()
 
         ax.set_title("Car price prediction by mileage")
         ax.set_xlabel("Mileage")
         ax.set_ylabel("Price")
 
-        xlr = [0, 1]
-        ylr = [predict(0, p0, p1), predict(1, p0, p1)]
+        xlr = [min(x), max(x)]
+        ylr = [predict(min(x), theta0, theta1), predict(max(x), theta0, theta1)]
         ax.text(0.75, 0.75, f"Mean square error: {float(words[2]):.4f}")
         ax.plot(xlr, ylr, color="orange", label="Prediction")
         ax.scatter(x, y, color="cadetblue", label="Real data")
@@ -39,21 +36,13 @@ def draw_lr(process, x, y):
     plt.ioff()
     plt.show()
 
+
 def main():
 
-    mileages = [
-            1.0, 0.53846365, 0.5877495, 0.74910295, 0.70520633, 0.4233099,
-            0.66282976, 0.3044712, 0.5601126, 0.28144044, 0.27236173, 0.18498763,
-            0.23537892, 0.3436235, 0.20313586, 0.24470638, 0.11670145, 0.3228958,
-            0.17526405, 0.19702812, 0.1432559, 0.2100451, 0.0, 0.17913322,
-        ]
+    data = pd.read_csv("./data.csv")
 
-    prices = [
-            0.0, 0.032327585, 0.16163793, 0.1724138, 0.3448276, 0.36637932,
-            0.46336207, 0.50431037, 0.50625, 0.54956895, 0.5905172, 0.5905172,
-            0.63577586, 0.6788793, 0.6788793, 0.70043105, 0.70043105, 0.7198276,
-            0.82758623, 0.8415948, 0.9353448, 0.9353448, 0.9353448, 1.0,
-        ]
+    mileages = list(data['km'])
+    prices = list(data['price'])
 
     try:
         process = subprocess.Popen(
