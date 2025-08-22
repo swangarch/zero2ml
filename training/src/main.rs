@@ -113,8 +113,11 @@ fn training(mileages: &mut Vec<f32>, prices: &mut Vec<f32>, rate: f32) -> Result
             break;
         }
 
-        theta[0] -= rate * cal_grad0(&mileages, &prices, &theta);
-        theta[1] -= rate * cal_grad1(&mileages, &prices, &theta);
+        let tmp0 = theta[0] - rate * cal_grad0(&mileages, &prices, &theta);
+        let tmp1 = theta[1] - rate * cal_grad1(&mileages, &prices, &theta);
+
+        theta[0] = tmp0;
+        theta[1] = tmp1;
 
         if i % 100 == 0 {
 
