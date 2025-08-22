@@ -4,7 +4,7 @@ import pandas as pd
 import sys
 
 def predict(mileage, theta0, theta1) -> float:
-    """"""
+    """Given theta and a mileage, pridict its price"""
 
     return theta0 + mileage * theta1
 
@@ -65,8 +65,6 @@ def main():
         print("Error: Mismatched data in datatable")
         sys.exit(1)
 
-    # print(1)
-
     try:
         process = subprocess.Popen(
             [args[1], args[2]],
@@ -77,8 +75,6 @@ def main():
     except Exception as e:
         print("Error: Failed to run tranning program", e)
         sys.exit(1)
-
-    # print(2)
 
     try:
         draw_lr(process, mileages, prices)
