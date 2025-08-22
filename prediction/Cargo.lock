@@ -3,5 +3,5 @@
 version = 3
 
 [[package]]
-name = "ex01"
+name = "prediction"
 version = "0.1.0"

@@ -3,14 +3,23 @@ import subprocess
 import pandas as pd
 import sys
 
-def predict(mileage, p0, p1):
-    return p0 + mileage * p1
+def predict(mileage, theta0, theta1) -> float:
+    """"""
 
-def draw_lr(process, x, y):
+    return theta0 + mileage * theta1
+
+def draw_lr(process, x, y) -> None:
+    """This function will run training program in the subprocess, and visulize the result."""
+    
     plt.ion()
     fig, ax = plt.subplots()
+
+    for line in process.stderr:
+        print("Error: Training program error: ", line.strip())
+        sys.exit(1)
     
     for line in process.stdout:
+
         words = line.split(" ")
         theta0 = float(words[0])
         theta1 = float(words[1])
@@ -36,10 +45,11 @@ def draw_lr(process, x, y):
     plt.show()
 
 def main():
+    """Main fucntion will check args number, read and parse csv, then it will run the traning program, and visulize the training process."""
 
     args = sys.argv
     if len(args) != 3:
-        print("Error: Wrong argv number usage: <path linear_regression_program> <data data.csv>")
+        print("Error: Wrong argv number, usage: <linear_regression_program_path> <data_csv_path>")
         sys.exit(1)
 
     try:
@@ -48,8 +58,14 @@ def main():
         mileages = list(data['km'])
         prices = list(data['price'])
     except Exception as e:
-        print("Error: Failed to read training data.", e)
+        print("Error: Failed to read training data", e)
         sys.exit(1)
+
+    if len(mileages) != len(prices):
+        print("Error: Mismatched data in datatable")
+        sys.exit(1)
+
+    # print(1)
 
     try:
         process = subprocess.Popen(
@@ -58,9 +74,11 @@ def main():
             stderr=subprocess.PIPE,
             text=True
         )
-    except:
-        print("Error: Failed to open tranning program, make sure you use right linear_regression.")
+    except Exception as e:
+        print("Error: Failed to run tranning program", e)
         sys.exit(1)
+
+    # print(2)
 
     try:
         draw_lr(process, mileages, prices)
