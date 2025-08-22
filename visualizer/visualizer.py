@@ -3,12 +3,12 @@ import subprocess
 import pandas as pd
 import sys
 
-def predict(mileage, theta0, theta1) -> float:
+def predict(mileage: float, theta0: float, theta1: float) -> float:
     """Given theta and a mileage, pridict its price"""
 
     return theta0 + mileage * theta1
 
-def draw_lr(process, x, y) -> None:
+def draw_lr(process: subprocess.Popen, x: float, y: float) -> None:
     """This function will run training program in the subprocess, and visulize the result."""
     
     plt.ion()
