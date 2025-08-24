@@ -30,7 +30,7 @@ fn denorm_theta(m_range: &Vec<f32>, p_range: &Vec<f32>, theta: &Vec<f32>, o_thet
     let y1 = denorm_value(theta[0] + theta[1], &p_range);
 
     o_theta[1] = (y1 - y0) / (x1 - x0);
-    o_theta[0] = y1 - o_theta[1] * x1;
+    o_theta[0] = y1 - (y1 - y0) / (x1 - x0) * x1;
 }
 
 fn cal_pred(theta: &Vec<f32>, mileage: f32) -> f32 {
