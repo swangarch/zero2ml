@@ -1,7 +1,7 @@
-# zero2ml-rust
+# zero2ml
 
-**zero2ml-rust** is a **practice project** to learn machine learning **from zero**,  
-by re-implementing fundamental algorithms in **Rust**, with **Python** for visualization.
+**zero2ml** is a **practice project** to learn machine learning **from zero**,  
+by re-implementing fundamental machin learning algorithms.
 
 The purpose of this repository is **educational**:  
 to understand how classic ML models work internally,  
@@ -12,15 +12,13 @@ not to build a production-ready library.
 ## ✨ Highlights
 
 - **From Zero** → no external ML frameworks, everything implemented from scratch  
-- **Rust** → safe, fast, and memory-efficient for algorithm implementation  
-- **Python** → clear and simple visualization with matplotlib
 - **Educational** → designed as a step-by-step learning exercise  
 
 ---
 
 ## 📌 Current Progress
 
-- [x] Linear Regression (done 🎉)  
+- [x] Linear Regression (done 🎉 with Rust)  
 - [ ] Logistic Regression (WIP)  
 - [ ] Multilayer Perceptron (planned)
 - [ ] More to come... 🚀
@@ -28,7 +26,7 @@ not to build a production-ready library.
 
 ### 1. Linear Regression ✅
 
-Linear regression is implemented with three programs:
+Linear regression is implemented with three programs, main algorithm is implemented with Rust, visualizer with python:
 
 #### 📖 Programs
 
@@ -63,6 +61,6 @@ Linear regression is implemented with three programs:
 ## 🎯 Goal
 
 By the end of this project, the repository will contain:  
-1. A minimal set of ML algorithms written in Rust  
+1. A minimal set of ML algorithms.  
 2. Python scripts & notebooks for visualizing training results  
 3. A clean and educational codebase that shows **how ML works under the hood**
