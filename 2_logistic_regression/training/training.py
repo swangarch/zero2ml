@@ -1,12 +1,8 @@
 #!/usr/bin/python3
 
-# from load_csv import load
 import pandas as pd
-import sys
 import numpy as np
 from numpy import ndarray as array
-import copy as cp
-
 from train_util import normalize, predict, preprocess_class_onevsall, cal_grad, count_correct
 
 
@@ -38,7 +34,6 @@ def train(features: array, results: array) -> None:
 		li_weight.append(0.0) #theta i
 	print("--------------------init done-------------------------")
 
-
 	print("----------------------main train----------------------------")
 	learning_rate = 0.001
 	for i in range(100000):
@@ -50,7 +45,7 @@ def train(features: array, results: array) -> None:
 		li_weight = li_weight_array.astype(float).tolist()
 		binary_arr = (res > 0.5).astype(int)
 
-		if i % 50 == 0:
+		if i % 500 == 0:
 			
 			print("\033[033m[EPOCH]", int(i / 50), count_correct(binary_arr, results, length), "\033[0m")
 			if DEBUG:
@@ -59,7 +54,6 @@ def train(features: array, results: array) -> None:
 				print("\033[035m[WEIS]",li_weight_array, "\033[0m")
 				print("\033[032m[RESS]",res, "\033[0m")
 				print("----------------------------------------------\033[0m")
-			
+
 	print("----------------------train done----------------------------")
-
-
+	print(f'\033[031m[WEIGHTS] {li_weight}\033[0m')

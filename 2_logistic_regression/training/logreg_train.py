@@ -3,14 +3,10 @@
 from load_csv import load
 import pandas as pd
 import sys
-import numpy as np
-from numpy import ndarray as array
-import copy as cp
-
 from training import set_train_goal
 
 
-def main():
+def main(): # add try catch
 	"""Main to train."""
 
 	print("\033[33mUsage: python3 describe.py <path_csv>\033[0m")
@@ -46,9 +42,9 @@ def main():
 	class_name = "Hogwarts House"
 
 	set_train_goal(df, feature_names, class_name, "Ravenclaw")
-	set_train_goal(df, feature_names, class_name, "Gryffindor")
-	set_train_goal(df, feature_names, class_name, "Slytherin")
-	set_train_goal(df, feature_names, class_name, "Hufflepuff")
+	# set_train_goal(df, feature_names, class_name, "Gryffindor")
+	# set_train_goal(df, feature_names, class_name, "Slytherin")
+	# set_train_goal(df, feature_names, class_name, "Hufflepuff")
 
 
 if __name__ == "__main__":

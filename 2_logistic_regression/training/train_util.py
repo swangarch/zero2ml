@@ -24,10 +24,8 @@ def cross_entropy_loss(predict:array, truth:array) -> None:
 def predict(res:array, weight:list, fnorm:list) -> array:
 	"""Calculate the training prediction"""
 
-	# print("INIT RES", res)
 	for i, f in enumerate(fnorm):
 		res += weight[i + 1] * f
-		# print("RES", res)
 	res += weight[0]
 
 	res = 1.0 / (1 + np.e ** (-res)) #sigmoid
@@ -46,7 +44,7 @@ def cal_grad(prediction: array, groundTruth: array, features: list, weight:list)
 	diff = prediction - groundTruth
 	gradient = []
 	length = len(prediction)
-	for i,t in enumerate(weight):
+	for i in range(len(weight)):
 		if i == 0: #bias
 			theta0 = float((np.nansum(diff) / length))
 			gradient.append(theta0)
@@ -54,7 +52,6 @@ def cal_grad(prediction: array, groundTruth: array, features: list, weight:list)
 			theta = float((np.nansum(diff * features[i - 1]) / length))
 			gradient.append(theta)
 
-	# print("\033[33m[GRADIENT]", gradient, "\033[0m")
 	return gradient
 
 
