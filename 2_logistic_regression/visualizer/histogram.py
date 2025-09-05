@@ -24,7 +24,6 @@ def plot_scatter(data: pd.DataFrame) -> None:
 	"""Show all the pair plots."""
 
 	features = data.iloc[0].index
-	# print(data.iloc[0]) # debug
 
 	count = 0
 	for f1 in features:
