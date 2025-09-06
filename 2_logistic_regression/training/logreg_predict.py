@@ -3,22 +3,47 @@
 from load_csv import load
 import pandas as pd
 import sys
-from training import set_train_goal
+from pandas import DataFrame as dataframe
+from logregallClass import logregall
+import numpy as np
+from numpy import ndarray as array
+
+
+def clean_data(df: dataframe) -> dataframe:
+	"""Clean data, drop nan value line"""
+
+	return df.dropna()
+
+
+def split_data(df: dataframe) -> tuple:
+	"""Split the data into test data and validation data"""
+
+	train_df = df.sample(frac=0.8, random_state=412)
+	test_df = df.drop(train_df.index)
+	return train_df, test_df
+
+
+def save_weights(weight: array):
+	"""Save the weights."""
+
+	try:
+		np.savetxt("weight.csv", weight, delimiter=",", fmt="%f")
+	
+	except Exception as e:
+		print("Error:", e)
 
 
 def main(): # add try catch
-	"""Main to train."""
+	"""Main to load dataset and train."""
 
 	print("\033[33mUsage: python3 describe.py <path_csv>\033[0m")
 	argv = sys.argv
 	assert len(argv) == 2, "Wrong argument number."
-
 	pd.set_option('display.float_format', '{:.6f}'.format)
+
 	df = load(argv[1])
-	if df is None:
-		sys.exit(1)
 	
-	# feature_names_irrel = [
+	# feature_names = [
 	# 				 "Astronomy", "Herbology", 
 	# 			     "Arithmancy", "Charms", 
 	# 				 "Divination", "Ancient Runes",
@@ -39,12 +64,13 @@ def main(): # add try catch
 					 "Flying",
 					]
 	
-	class_name = "Hogwarts House"
+	classname = "Hogwarts House"
+	goals = ["Ravenclaw", "Gryffindor", "Slytherin", "Hufflepuff"]
 
-	set_train_goal(df, feature_names, class_name, "Ravenclaw")
-	# set_train_goal(df, feature_names, class_name, "Gryffindor")
-	# set_train_goal(df, feature_names, class_name, "Slytherin")
-	# set_train_goal(df, feature_names, class_name, "Hufflepuff")
+	lgall = logregall(df, feature_names, classname, goals)
+	df_new = load("dataset_test.csv")
+	lgall.load_weights("weights.csv")
+	lgall.predict_new(df_new)
 
 
 if __name__ == "__main__":

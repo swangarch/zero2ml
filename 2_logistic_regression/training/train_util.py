@@ -1,11 +1,8 @@
 #!/usr/bin/python3
 
-from load_csv import load
-import pandas as pd
-import sys
 import numpy as np
 from numpy import ndarray as array
-import copy as cp
+from pandas import DataFrame as dataframe
 
 
 def normalize(li: array, range: tuple) -> array:
@@ -21,7 +18,7 @@ def cross_entropy_loss(predict:array, truth:array) -> None:
 	pass
 
 
-def predict(res:array, weight:list, fnorm:list) -> array:
+def prob_predict(res:array, weight:list, fnorm:list) -> array:
 	"""Calculate the training prediction"""
 
 	for i, f in enumerate(fnorm):
@@ -32,7 +29,7 @@ def predict(res:array, weight:list, fnorm:list) -> array:
 	return res
 
 
-def preprocess_class_onevsall(arr:array, className: str) -> array:
+def preproc_onevsall(arr:array, className: str) -> array:
 	"""preprocess class one vs all"""
 
 	return np.array([1 if h == className else 0 for h in arr])
@@ -55,12 +52,13 @@ def cal_grad(prediction: array, groundTruth: array, features: list, weight:list)
 	return gradient
 
 
-def count_correct(prediction:array, truth: array, length: int) -> None:
+def count_correct(prediction:array, truth: array) -> str:
 	"""Count prediction truth"""
 
 	count = 0
+	length = len(truth)
 	for i, num in enumerate(truth):
 		if (num == prediction[i]):
 			count += 1
 
-	return f"<CORRECT> {count}   <RATE> {count / float(length) * 100:2f}%"
+	return f"\033[33m<CORRECT> {count}/{length}   <RATE> {count / float(length) * 100:2f}%\033[0m"
