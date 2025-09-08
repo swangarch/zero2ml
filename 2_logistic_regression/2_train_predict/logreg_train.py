@@ -1,17 +1,17 @@
 #!/usr/bin/python3
 
-from load_csv import load
+from utils.load_csv import load
 import pandas as pd
 import sys
-from logregallClass import logregall
-from train_utils import clean_data, split_data
+from utils.logregallClass import logregall
+from utils.train_utils import clean_data, split_data
 
 
 def main():
 	"""Main to load dataset and train."""
 
 	try:
-		print("\033[33mUsage: python3 describe.py <path_csv>\033[0m")
+		print("\033[33mUsage: python3 logreg_train.py <path_csv>\033[0m")
 		argv = sys.argv
 		assert len(argv) == 2, "Wrong argument number."
 		pd.set_option('display.float_format', '{:.6f}'.format)

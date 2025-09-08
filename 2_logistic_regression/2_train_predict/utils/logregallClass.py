@@ -1,8 +1,9 @@
-from logregClass import logreg, save_weights
-from train_utils import count_correct
+from utils.logregClass import logreg, save_weights
+from utils.train_utils import count_correct
 import numpy as np
 import pandas as pd
 from datetime import datetime
+import os
 
 
 class logregall:
@@ -31,7 +32,8 @@ class logregall:
             self.weights.append(weights)
 
         print(f"\033[031m[TOTAL TRAINING TIME] {datetime.now() - startTime}\033[0m")
-        save_weights(np.array(self.weights), "weights.csv")
+        os.makedirs("output", exist_ok=True)
+        save_weights(np.array(self.weights), "output/weights.csv")
         
     def predict_test(self, df_test):
         """Predict for test dataset."""
@@ -74,13 +76,14 @@ class logregall:
             max_idx = np.argmax(arr)
             final_index[i] = max_idx
 
-        print("\033[33m[FINAL PREDICTION SAVED] weights.csv\33[0m]")
+        print("\033[33m[FINAL PREDICTION SAVED] house.csv\33[0m]")
 
         final = []
         for count, index in enumerate(final_index):
             final.append([count, self.goals[index]]) 
         df = pd.DataFrame(final, columns=["Index", "Hogwarts House"])
-        df.to_csv("house.csv", index=False)
+        os.makedirs("output", exist_ok=True)
+        df.to_csv("output/house.csv", index=False)
 
     def load_weights(self, path):
         """Load weights from file."""

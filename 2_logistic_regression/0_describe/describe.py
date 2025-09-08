@@ -83,9 +83,8 @@ def main():
 		df_num = df.select_dtypes(include="number")
 		ft_describe(df_num)
 
-
 		rows_with_nan = df[df_num.isna().any(axis=1)]
-		print("\n包含 NaN 的行：")
+		print("\nLine include Nan:")
 		print(rows_with_nan)
 
 	except KeyboardInterrupt:

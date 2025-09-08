@@ -2,7 +2,7 @@
 
 import numpy as np
 from numpy import ndarray as array
-from train_utils import normalize, prob_predict, preproc_onevsall, cal_grad, count_correct
+from utils.train_utils import normalize, prob_predict, preproc_onevsall, cal_grad, count_correct
 from datetime import datetime
 from pandas import DataFrame as dataframe
 
@@ -47,7 +47,7 @@ class logreg:
                     print("\n")
                 self.debug_info(Debug, gradient, res)
 
-        print(f"[----------------------{self.goal} training done----------------------------]")
+        print(f"\033[?25h[----------------------{self.goal} training done----------------------------]")
         print(f"\033[031m[{self.goal} TRAINING TIME] {datetime.now() - startTime}\033[0m\n")
         return self.weights
 

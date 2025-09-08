@@ -6,10 +6,15 @@ from load_csv import load
 import matplotlib.pyplot as plt
 
 
-def visualize_scatter(data: pd.DataFrame, feature1:str, feature2:str) -> None:
+def visualize_scatter(data: pd.DataFrame, types:list, feature1:str, feature2:str) -> None:
 	"""Visualize data."""
 	
 	try:
+		# types = data["Hogwarts House"].values
+		# print(types)
+		# return
+		# plt.scatter(data[feature1].values, data[feature2].values, s=1, c=types, cmap="viridis")
+
 		plt.scatter(data[feature1].values, data[feature2].values, s=1)
 		title = f"Scatter:{feature1} * {feature2}"
 		plt.title(title)
@@ -20,7 +25,7 @@ def visualize_scatter(data: pd.DataFrame, feature1:str, feature2:str) -> None:
 		print("Error in scatter visualizer:", e)
 
 
-def plot_scatter(data: pd.DataFrame, max_num: int) -> None:
+def plot_scatter(data: pd.DataFrame, max_num: int, types:list) -> None:
 	"""Show all the pair plots."""
 
 	features = data.iloc[0].index
@@ -33,7 +38,7 @@ def plot_scatter(data: pd.DataFrame, max_num: int) -> None:
 			if f1 != f2:
 				count += 1
 				print(f"Scatter {count}: {f1} * {f2}")
-				visualize_scatter(data, f1, f2)
+				visualize_scatter(data, types, f1, f2)
 			if max_num is not None and count >= max_num:
 				print("\033[33mDone\033[0m")
 				return
@@ -55,9 +60,10 @@ def main():
 		df = load(argv[1])
 		if df is None:
 			sys.exit(1)
-
+		
+		types = list(df["Hogwarts House"].values)
 		df_num = df.select_dtypes(include="number")
-		plot_scatter(df_num, max_num)
+		plot_scatter(df_num, max_num, types)
 
 	except KeyboardInterrupt:
 		print("\033[33mStopped by user.\033[0m")
