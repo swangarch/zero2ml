@@ -23,7 +23,7 @@ class logreg:
         self.catToTrain = preproc_onevsall(catArr, goal)
         self.length = len(self.catToTrain)
         self.ranges = [] #tuple list
-        self.weights = [0.0] #scalar list
+        # self.weights = [0.0] #scalar list
         self.weights = np.zeros(len(self.feature_names) + 1, dtype=np.float32)
         self.fnorms = [] #array list
 

@@ -44,7 +44,7 @@ class logregall:
         if len(self.weights) == 0:
             raise("No model weights yet.")
         predictions = []
-        for i in range(len(self.lgs)):	
+        for i in range(len(self.lgs)):
             predictions.append(self.lgs[i].predict(df_test))
         final_prediction = np.stack(predictions).transpose()
 
