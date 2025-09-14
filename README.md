@@ -87,7 +87,7 @@ Logistic regression is implemented with Python, mainly used for binary classific
      ```bash
      python logreg_train.py <dataset_train.csv>
      ```  
-   - Takes a CSV dataset with labeled binary classes.  
+   - Takes a CSV dataset with labeled classes.  
    - Trains the logistic regression model using gradient descent.  
    - Saves the trained weights into `data/weights.txt`.  
 
@@ -98,7 +98,8 @@ Logistic regression is implemented with Python, mainly used for binary classific
      ```  
    - Loads trained weights from `weights.txt`.  
    - Predicts class probabilities for given test samples.  
-   - Outputs predicted class (0 or 1).  
+   - Outputs predicted class (0 or 1).
+   - One-vs-all tasks with multi models training.
 
 
 ---
@@ -123,46 +124,44 @@ The design goal is to provide a reusable and modular implementation.
 
 2. **Class example** 
 
-## 📘 Example: Train and Test a Neural Network
+#### 📘 Example: Train and Test a Neural Network
 
 Below is a simple example of using the `NN` class to train a regression model.
 
-### Code
+
+  from utils.activation_func import relu, sigmoid
+  from utils.data_generation import generate_data_1d
+  from utils.nnClass import NN
 
 
-from utils.activation_func import relu, sigmoid
-from utils.data_generation import generate_data_1d
-from utils.nnClass import NN
+  def main():
+      try:
+          # Define network structure: input → 64 → 32 → output
+          net_shape = (1, 64, 32, 1)
+          activation_funcs = (relu, relu, None)  # last layer is linear (regression)
+
+          # Initialize neural network
+          nn = NN(net_shape, activation_funcs)
+
+          # Generate training data
+          inputs, truths = generate_data_1d(142, 100)
+          nn.train(inputs, truths, max_iter=20000, learning_rate=0.05)
+
+          # Test with new data
+          test_inputs, test_truths = generate_data_1d(123, 80)
+          nn.test(test_inputs, test_truths)
+
+          # Show loss curve
+          nn.show_loss()
+
+      except Exception as e:
+          print("Error:", e)
 
 
-def main():
-    try:
-        # Define network structure: input → 64 → 32 → output
-        net_shape = (1, 64, 32, 1)
-        activation_funcs = (relu, relu, None)  # last layer is linear (regression)
+  if __name__ == "__main__":
+      main()
 
-        # Initialize neural network
-        nn = NN(net_shape, activation_funcs)
-
-        # Generate training data
-        inputs, truths = generate_data_1d(142, 100)
-        nn.train(inputs, truths, max_iter=20000, learning_rate=0.05)
-
-        # Test with new data
-        test_inputs, test_truths = generate_data_1d(123, 80)
-        nn.test(test_inputs, test_truths)
-
-        # Show loss curve
-        nn.show_loss()
-
-    except Exception as e:
-        print("Error:", e)
-
-
-if __name__ == "__main__":
-    main()
-
-![Regression demo](visualizaton/3_nn/prediction.jpg)
+![Regression demo](visualization/3_nn/prediction.jpg)
 
 ---
 
