@@ -65,6 +65,11 @@ Linear regression is implemented with three programs, main algorithm is implemen
 
 Logistic regression is implemented with Python, mainly used for binary classification tasks, can perfom one-vs-all tasks.
 
+This project builds a generalized logistic regression classifier to predict a Hogwarts house based on student features.
+It applies a one-vs-all strategy to handle the multi-class setting.
+The implementation is highly modular and encapsulated, so the same class can be reused for other datasets. Thus, it serves 
+as a flexible solution for general multi-class linear classification problems.
+
 #### 📖 Programs  
 
 0. **Describer**  
