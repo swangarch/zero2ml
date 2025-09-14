@@ -57,7 +57,7 @@ Linear regression is implemented with three programs, main algorithm is implemen
    - Runs the Rust training program, collects the results,  
      and visualizes the training process and regression line using Python (matplotlib).  
 
-   ![Data visualization demo](visualization/1_lr/linear_regression.jpeg)
+   ![Data visualization demo](visualization/1_lr/linear_regression.jpg)
 
 ---
 
