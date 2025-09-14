@@ -105,7 +105,7 @@ This project also includes a data science part with analysis and visualization t
 3. **Predictor**  
    - Usage:  
      ```bash
-     python predict.py <dataset_train.csv> <dataset_test.csv> <weights.txt>
+     python logreg_predict.py <dataset_train.csv> <dataset_test.csv> <weights.txt>
      ```  
    - Loads trained weights from `weights.txt`.  
    - Predicts class probabilities for given test samples.  
