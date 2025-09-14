@@ -128,40 +128,42 @@ The design goal is to provide a reusable and modular implementation.
 
 Below is a simple example of using the `NN` class to train a regression model.
 
-
-  from utils.activation_func import relu, sigmoid
-  from utils.data_generation import generate_data_1d
-  from utils.nnClass import NN
-
-
-  def main():
-      try:
-          # Define network structure: input → 64 → 32 → output
-          net_shape = (1, 64, 32, 1)
-          activation_funcs = (relu, relu, None)  # last layer is linear (regression)
-
-          # Initialize neural network
-          nn = NN(net_shape, activation_funcs)
-
-          # Generate training data
-          inputs, truths = generate_data_1d(142, 100)
-          nn.train(inputs, truths, max_iter=20000, learning_rate=0.05)
-
-          # Test with new data
-          test_inputs, test_truths = generate_data_1d(123, 80)
-          nn.test(test_inputs, test_truths)
-
-          # Show loss curve
-          nn.show_loss()
-
-      except Exception as e:
-          print("Error:", e)
+```python
+from utils.activation_func import relu, sigmoid
+from utils.data_generation import generate_data_1d
+from utils.nnClass import NN
 
 
-  if __name__ == "__main__":
-      main()
+def main():
+    try:
+        # Define network structure: input → 64 → 32 → output
+        net_shape = (1, 64, 32, 1)
+        activation_funcs = (relu, relu, None)  # last layer is linear (regression)
+
+        # Initialize neural network
+        nn = NN(net_shape, activation_funcs)
+
+        # Generate training data
+        inputs, truths = generate_data_1d(142, 100)
+        nn.train(inputs, truths, max_iter=20000, learning_rate=0.05)
+
+        # Test with new data
+        test_inputs, test_truths = generate_data_1d(123, 80)
+        nn.test(test_inputs, test_truths)
+
+        # Show loss curve
+        nn.show_loss()
+
+    except Exception as e:
+        print("Error:", e)
+
+
+if __name__ == "__main__":
+    main()
+```
 
 ![Regression demo](visualization/3_nn/prediction.jpg)
+
 
 ---
 
