@@ -184,3 +184,7 @@ By the end of this project, the repository will contain:
 1. A minimal set of ML algorithms.  
 2. Python scripts & notebooks for visualizing training results  
 3. A clean and educational codebase that shows **how ML works under the hood**
+
+
+## License
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
