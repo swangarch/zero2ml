@@ -57,6 +57,8 @@ Linear regression is implemented with three programs, main algorithm is implemen
    - Runs the Rust training program, collects the results,  
      and visualizes the training process and regression line using Python (matplotlib).  
 
+   ![Data visualization demo](visualization/1_lr/linear_regression.jpeg)
+
 ---
 
 ### 2. Logistic Regression ✅
@@ -82,8 +84,7 @@ Logistic regression is implemented with Python, mainly used for binary classific
    - Plots the training dataset with histogram, and scatter plot.  
    - Displays intuitively the distribution of data. 
 
-   ![Data visualization demo](visualization/2_lr/data_histogram.jpeg)
-   ![Data visualization demo](visualization/2_lr/data_scatter.jpeg)
+   ![Data visualization demo](visualization/2_lr/data_histogram_scatter.jpg)
    ![Data visualization demo](visualization/2_lr/pair_plot.jpeg)
 
 2. **Trainer**  
