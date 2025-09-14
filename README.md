@@ -80,7 +80,11 @@ Logistic regression is implemented with Python, mainly used for binary classific
      python pair_plot.py <data.csv>
      ```  
    - Plots the training dataset with histogram, and scatter plot.  
-   - Displays intuitively the distribution of data.  
+   - Displays intuitively the distribution of data. 
+
+   ![Data visualization demo](visualization/2_lr/data_histogram.jpeg)
+   ![Data visualization demo](visualization/2_lr/data_scatter.jpeg)
+   ![Data visualization demo](visualization/2_lr/pair_plot.jpeg)
 
 2. **Trainer**  
    - Usage:  
