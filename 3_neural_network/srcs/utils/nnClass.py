@@ -59,10 +59,11 @@ class NN:
             self.grads_biases = []
             for i_data, input in enumerate(inputs):
                 # -----------------------------forward --------------------------------
+                # print("INPUT => ", input)
                 activ = input
                 actives = [input]
                 for i in range(self.len_nets):
-                    activ = forward_layer(activ, self.nets[i], self.biases[i], self.activ_funcs[i])
+                    activ = forward_layer(self.nets[i], activ, self.biases[i], self.activ_funcs[i])
                     actives.append(activ)
                 # -----------------------------forward end-----------------------------
 
@@ -71,13 +72,12 @@ class NN:
                 Bgrads = []
                 diff = (actives[-1] - truths[i_data] ) * activ_deriv(self.activ_funcs[-1], actives[-1], self.deriv_func_map) # last layer difference
                 Bgrads.append(diff) #gradient for bias
-                Wgrads.append(diff.reshape(-1, 1) @ actives[-2].reshape(1, -1))  # add gradient for weights to grads
-
+                Wgrads.append(diff @ actives[-2].T)
                 for i in range(self.len_nets - 1, 0, -1): #exclude index == 0
-                    loss_prev_layer = diff @ self.nets[i].T  #cal the loss of prev layer
+                    loss_prev_layer = self.nets[i].T @ diff  #cal the loss of prev layer
                     diff = loss_prev_layer * activ_deriv(self.activ_funcs[i - 1], actives[i], self.deriv_func_map)
                     Bgrads.append(diff) #gradient for bias
-                    Wgrads.append(diff.reshape(-1, 1) @ actives[i - 1].reshape(1, -1))  # add gradient for weights to grads 
+                    Wgrads.append(diff @ actives[i - 1].T) # add gradient for weights to grads 
                 # -----------------------------back probab end-----------------------------
                 self.grads_weights.append(Wgrads)
                 self.grads_biases.append(Bgrads)
@@ -102,7 +102,7 @@ class NN:
         for test_input in test_inputs:
             res = test_input
             for i in range(len(self.nets)):
-                res = forward_layer(res, self.nets[i], self.biases[i], self.activ_funcs[i])
+                res = forward_layer(self.nets[i], res, self.biases[i], self.activ_funcs[i])
                 if i == len(self.nets) - 1:
                     test_result.append(list(res))
 

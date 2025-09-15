@@ -7,14 +7,14 @@ def create_bias(net_shape:tuple, value):
 
     biases = []
     for num in net_shape[1:]:
-        biases.append(np.full((num), value, dtype=np.float32))
+        biases.append(np.full(((num), 1), value, dtype=np.float32))
     return biases
 
 
-def forward_layer(arr1:array, arr2:array, biases:array, activ_func):
+def forward_layer(weights:array, activations:array, biases:array, activ_func):
     """Perform layer forwarding."""
 
-    res = arr1 @ arr2 + biases
+    res = weights @ activations + biases
     if activ_func is None:
         return res
     else: 
@@ -29,9 +29,9 @@ def init_matrix(shapes: tuple, value:float, random=False):
         raise("Invalid network structure.")
     for i in range(len(shapes) - 1):
         if random == False:
-            matrix = np.full((shapes[i], shapes[i + 1]), value, dtype=np.float32)
+            matrix = np.full((shapes[i + 1], shapes[i]), value, dtype=np.float32)
         else:
-            matrix = np.random.randn(shapes[i], shapes[i + 1]) * np.sqrt(2.0 / shapes[i])
+            matrix = np.random.randn(shapes[i + 1], shapes[i]) * np.sqrt(2.0 / shapes[i])
         matrixs.append(matrix)
     return matrixs
 
@@ -50,7 +50,7 @@ def mean_gradients(net_structure, Wgrads, Bgrads, num_data):
     Bgrads_mean = create_bias(net_structure, 0)
     for idx, Wgrad in enumerate(Wgrads):
         for i in range(len_nets):
-            Wgrads_mean[i] += np.transpose(Wgrad[len_nets - i - 1])
+            Wgrads_mean[i] += Wgrad[len_nets - i - 1]
             Bgrads_mean[i] += Bgrads[idx][len_nets - i - 1]
     for i in range(len_nets):
         Wgrads_mean[i] /= num_data

@@ -1,11 +1,11 @@
 from utils.activation_func import relu, sigmoid
-from utils.data_generation import generate_data_1d
+from utils.data_generation import generate_data_1d, generate_data_3d
 from utils.nnClass import NN
 
 
 def main():
     try:
-        net_shape = (1, 64, 32, 1)
+        net_shape = (1, 64, 64, 1)
         activation_funcs = (relu, relu, None)
 
         nn = NN(net_shape, activation_funcs)
