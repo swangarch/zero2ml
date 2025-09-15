@@ -1,6 +1,6 @@
 import numpy as np
-from utils.activation_func import relu, relu_deriv, sigmoid, sigmoid_deriv, activ_deriv
-from utils.nnUtils import forward_layer, network, loss, mse_loss, create_bias, gradient_descent, mean_gradients, shuffle_data, split_dataset
+from utils.activation_func import *
+from utils.nnUtils import *
 import matplotlib.pyplot as plt
 from datetime import datetime
 import os
@@ -17,20 +17,21 @@ class NN:
         if len(shape) != len(activation_functions) + 1:
             raise ValueError("Mismatched net shape and activation functions.")
         
-        self.net_shape = shape  ##
-        self.activ_funcs = activation_functions  ##
+        self.net_shape = shape
+        self.activ_funcs = activation_functions
 
         self.nets = network(self.net_shape)
         self.len_nets = len(self.nets)
         self.len_out = self.net_shape[-1]
-        self.biases = create_bias(self.net_shape, 0.1) 
+        self.biases = create_bias(self.net_shape, 0.1)
+
+        self.Wgrads = [np.zeros_like(w) for w in self.nets] # only for easy batch train
+        self.Bgrads = [np.zeros_like(b) for b in self.biases] # only for easy batch train
+        self.actives = create_actives(shape, 0.0) # only for easy batch train
 
         self.graph_loss_train = []
         self.graph_loss_test = []
         self.graph_epoch = []
-        self.grads_weights = []
-        self.grads_biases = []
-        self.actives = []
 
         self.loss_threshold = 0.000000001
         self.loss_test = None
@@ -50,39 +51,62 @@ class NN:
 
 
     def train_batch(self, inputs, truths, learning_rate=0.01):
-        """"""
-
-        num_data = len(inputs)
-        self.grads_weights = []
-        self.grads_biases = []
-        for i_data, input in enumerate(inputs):
-            # -----------------------------forward --------------------------------
-            activ = input
-            self.actives = [input]
-            for i in range(self.len_nets):
-                activ = forward_layer(self.nets[i], activ, self.biases[i], self.activ_funcs[i])
-                self.actives.append(activ)
-            # -----------------------------forward end-----------------------------
-
-            # -----------------------------back probab --------------------------------
-            Wgrads = []  #collect the output gradient matrixs
-            Bgrads = []
-            diff = (self.actives[-1] - truths[i_data] ) * activ_deriv(self.activ_funcs[-1], self.actives[-1], self.deriv_map) # last layer difference
-            Bgrads.append(diff) #gradient for bias
-            Wgrads.append(diff @ self.actives[-2].T)
-            for i in range(self.len_nets - 1, 0, -1): #exclude index == 0
-                loss_prev_layer = self.nets[i].T @ diff  #cal the loss of prev layer
-                diff = loss_prev_layer * activ_deriv(self.activ_funcs[i - 1], self.actives[i], self.deriv_map)
-                Bgrads.append(diff) #gradient for bias
-                Wgrads.append(diff @ self.actives[i - 1].T) # add gradient for weights to grads 
-            # -----------------------------back probab end-----------------------------
-            self.grads_weights.append(Wgrads)
-            self.grads_biases.append(Bgrads)
-
-        Wgrads_mean, Bgrads_mean = mean_gradients(self.net_shape, self.grads_weights, self.grads_biases, num_data)
-        gradient_descent(self.nets, self.biases, Wgrads_mean, Bgrads_mean, learning_rate)
-
+        """Train a batch."""
     
+        inputs_batch = np.hstack(inputs)
+        truths_batch = np.hstack(truths)
+        # -----------------------------forward --------------------------------
+        actives = [inputs_batch]
+        Bgrads = []
+        Wgrads = []
+
+        for i in range(self.len_nets):
+            actives.append(forward_layer(self.nets[i], actives[i], self.biases[i], self.activ_funcs[i]))
+        # -----------------------------forward end-----------------------------
+        # -----------------------------back probab --------------------------------
+        diff = (actives[-1] - truths_batch) * activ_deriv(self.activ_funcs[-1], actives[-1], self.deriv_map) # last layer difference
+        Bgrads.append(np.mean(diff, axis=1, keepdims=True))
+        Wgrads.append(diff @ actives[-2].T / len(inputs))
+    
+        for i in range(self.len_nets - 1, 0, -1):
+            loss_prev_layer = self.nets[i].T @ diff  #cal the loss of prev layer
+            diff = loss_prev_layer * activ_deriv(self.activ_funcs[i - 1], actives[i], self.deriv_map) 
+            Bgrads.append(np.mean(diff, axis=1, keepdims=True))
+            Wgrads.append(diff @ actives[i - 1].T / len(inputs))
+        # -----------------------------back probab end-----------------------------
+        gradient_descent(self.nets, self.biases, Wgrads[::-1], Bgrads[::-1], learning_rate)
+
+
+    # def train_batch_easy(self, inputs, truths, learning_rate=0.01):  # Only used to explain
+    #     """Train a batch, version easier to understand but run slower."""
+
+    #     for i in range(len(self.Wgrads)):
+    #         self.Wgrads[i].fill(0)
+    #         self.Bgrads[i].fill(0)
+    #     for i_data in range(len(inputs)):
+    #         # -----------------------------forward --------------------------------
+    #         self.actives[0] = inputs[i_data]
+    #         for i in range(self.len_nets):
+    #             self.actives[i + 1] = forward_layer(self.nets[i], self.actives[i], self.biases[i], self.activ_funcs[i])
+    #         # -----------------------------forward end-----------------------------
+    #         # -----------------------------back probab --------------------------------
+    #         diff = (self.actives[-1] - truths[i_data] ) * activ_deriv(self.activ_funcs[-1], self.actives[-1], self.deriv_map) # last layer difference
+    #         self.Bgrads[-1] += diff
+    #         self.Wgrads[-1] += diff @ self.actives[-2].T
+        
+    #         for i in range(self.len_nets - 1, 0, -1): #exclude index == 0
+    #             loss_prev_layer = self.nets[i].T @ diff  #cal the loss of prev layer
+    #             diff = loss_prev_layer * activ_deriv(self.activ_funcs[i - 1], self.actives[i], self.deriv_map) 
+    #             self.Bgrads[i - 1] += diff
+    #             self.Wgrads[i - 1] += diff @ self.actives[i - 1].T
+    #         # -----------------------------back probab end-----------------------------
+    #     num_data = len(inputs)
+    #     for i in range(self.len_nets):
+    #         self.Wgrads[i] /= num_data
+    #         self.Bgrads[i] /= num_data
+    #     gradient_descent(self.nets, self.biases, self.Wgrads, self.Bgrads, learning_rate)
+    
+
     def inference(self, inputs):
         """After training, use weights to do inference."""
 
@@ -99,17 +123,17 @@ class NN:
         """Train a dataset."""
 
         self.check_train_params(inputs, truths)
-        self.prepare(visualize, inputs, truths, threshold)
+        self.prepare(visualize, threshold)
 
         inputs_train, truths_train, inputs_test, truths_test = split_dataset(inputs, truths, test_ratio)
         startTime = datetime.now()
         for epoch in range(max_iter):
-            inputs_shuffled, truths_shuffled = shuffle_data(inputs_train, truths_train)
+            inputs_train, truths_train = shuffle_data(inputs_train, truths_train)
             # mini_batch_training
             count = 0
             while count < len(inputs_train):
-                inputs_batch = inputs_shuffled[count: count + batch_size]
-                truths_batch = truths_shuffled[count: count + batch_size]
+                inputs_batch = inputs_train[count: count + batch_size]
+                truths_batch = truths_train[count: count + batch_size]
                 self.train_batch(inputs_batch, truths_batch, learning_rate)
                 count += batch_size
             # mini_batch_training
@@ -118,7 +142,6 @@ class NN:
                 break
         print()
         print("[TRAINING DONE]")
-
         self.plt.ioff()
         self.plt.close()
 
@@ -132,7 +155,7 @@ class NN:
         plt.savefig("visualize/prediction.png", dpi=300, bbox_inches='tight')
         plt.close()
 
-    
+
     def test_animation(self, test_inputs, test_truths):
         """Test for a new dataset."""
 
@@ -148,7 +171,7 @@ class NN:
     def show_record(self, epoch, inputs_train, inputs_test, truths_train, truths_test, startTime, animation): #return a boolean to determine if training continue
         """Show and record the loss"""
 
-        if epoch % 10 == 0:
+        if epoch % 50 == 0:
             predicts_train = self.inference(inputs_train)
             predicts_test = self.inference(inputs_test)
             loss_train = loss(mse_loss, truths_train, predicts_train)
@@ -164,16 +187,14 @@ class NN:
             if epoch % 100 == 0:
                 time = str(datetime.now() - startTime).split(".")[0]
                 print(f"\033[?25l[EPOCH] {epoch}  [LOSS_TRAIN] {loss_train:8f} [LOSS_TEST] {loss_test:8f}  [TIME] {time}\033[?25l", end="\r")
-                
 
             if self.loss_train  is not None and self.loss_test is not None:
                 if abs(self.loss_train - loss_train) < self.loss_threshold and abs(self.loss_test - loss_test) < self.loss_threshold:
                     return True
-            
+                    
             self.loss_train = loss_train
             self.loss_test = loss_test
 
-            
         return False
 
 
@@ -187,7 +208,7 @@ class NN:
         plt.close()
 
 
-    def prepare(self, visualize, inputs, truths, threshold):
+    def prepare(self, visualize, threshold):
         """Create plt scatter."""
 
         if visualize == True:
