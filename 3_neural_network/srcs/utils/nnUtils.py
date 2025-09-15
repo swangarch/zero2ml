@@ -77,3 +77,26 @@ def mse_loss(truth: array, predict: array):
     """Calculate mse loss."""
 
     return 0.5 * np.mean((truth - predict) ** 2)
+
+
+def shuffle_data(inputs, truths):
+    """Random shuffle the inputs and outputs data"""
+
+    indices = np.arange(len(inputs))
+    np.random.shuffle(indices)
+    inputs_shuffled = inputs[indices]
+    truths_shuffled = truths[indices]
+    return inputs_shuffled, truths_shuffled
+
+
+def split_dataset(inputs, truths, ratio):
+    inputs, truths = shuffle_data(inputs, truths) #random shuffle
+    num_data = len(inputs)
+    inputs_train = inputs[: int(num_data * ratio) - 1]
+    truths_train = truths[: int(num_data * ratio) - 1]
+    inputs_test = inputs[int(num_data * ratio) -1 :]
+    truths_test = truths[int(num_data * ratio) -1 :]
+
+    return inputs_train, truths_train, inputs_test, truths_test
+
+
