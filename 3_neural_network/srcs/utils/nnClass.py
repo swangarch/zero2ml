@@ -95,7 +95,7 @@ class NN:
         return result
 
 
-    def train(self, inputs, truths, max_iter=10000, learning_rate=0.01, batch_size=20, visualize=True, test_ratio = 0.8, threshold=None):
+    def train(self, inputs, truths, max_iter=10000, learning_rate=0.01, batch_size=20, visualize=True, test_ratio = 0.8, threshold=None, animation=False):
         """Train a dataset."""
 
         self.check_train_params(inputs, truths)
@@ -113,14 +113,14 @@ class NN:
                 self.train_batch(inputs_batch, truths_batch, learning_rate)
                 count += batch_size
             # mini_batch_training
-            stop = self.show_record(epoch, inputs_train, inputs_test, truths_train, truths_test, startTime)
+            stop = self.show_record(epoch, inputs_train, inputs_test, truths_train, truths_test, startTime, animation)
             if stop == True:
                 break
         print()
         print("[TRAINING DONE]")
 
         self.plt.ioff()
-        self.plt.show()
+        self.plt.close()
 
 
     def test(self, inputs, truths, test_inputs, test_truths):
@@ -135,20 +135,17 @@ class NN:
     
     def test_animation(self, test_inputs, test_truths):
         """Test for a new dataset."""
-        if not hasattr(self, "fig"):  
-            plt.ion()
-            self.fig, self.ax = plt.subplots()
 
         test_result = self.inference(test_inputs)
-    
-        self.plt.scatter(test_inputs[:, 0], np.array(test_result)[:, 0], c="red", label="Prediction", s=0.5)
-        self.plt.scatter(test_inputs[:, 0], np.array(test_truths)[:, 0], c="blue", label="Truth", s=0.5)
+        self.plt.clf()
+        self.plt.scatter(test_inputs[:, 0], np.array(test_truths)[:, 0], c="blue", label="Truth", s=5)
+        self.plt.scatter(test_inputs[:, 0], np.array(test_result)[:, 0], c="red", label="Prediction", s=5)
         self.plt.legend(loc="lower left")
-        self.plt.pause(0.001)
+        self.plt.pause(0.1)
         self.plt.show()
 
 
-    def show_record(self, epoch, inputs_train, inputs_test, truths_train, truths_test, startTime): #return a boolean to determine if training continue
+    def show_record(self, epoch, inputs_train, inputs_test, truths_train, truths_test, startTime, animation): #return a boolean to determine if training continue
         """Show and record the loss"""
 
         if epoch % 10 == 0:
@@ -161,9 +158,13 @@ class NN:
                 self.graph_loss_train.append(loss_train)
                 self.graph_loss_test.append(loss_test)
             self.graph_epoch.append(epoch)
+
+            if animation == True and epoch % 50 == 0:
+                self.test_animation(inputs_test[:50], truths_test[:50])
             if epoch % 100 == 0:
                 time = str(datetime.now() - startTime).split(".")[0]
                 print(f"\033[?25l[EPOCH] {epoch}  [LOSS_TRAIN] {loss_train:8f} [LOSS_TEST] {loss_test:8f}  [TIME] {time}\033[?25l", end="\r")
+                
 
             if self.loss_train  is not None and self.loss_test is not None:
                 if abs(self.loss_train - loss_train) < self.loss_threshold and abs(self.loss_test - loss_test) < self.loss_threshold:
@@ -172,7 +173,7 @@ class NN:
             self.loss_train = loss_train
             self.loss_test = loss_test
 
-            self.test_animation(inputs_test, truths_test)
+            
         return False
 
 

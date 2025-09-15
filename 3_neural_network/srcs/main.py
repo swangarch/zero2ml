@@ -10,10 +10,11 @@ def main():
 
         nn = NN(net_shape, activation_funcs)
 
-        inputs, truths = generate_data_1d(142, 100, 5)
-        nn.train(inputs, truths, 20000, 0.005)
-
+        inputs, truths = generate_data_1d(142, 200)
         test_inputs, test_truths = generate_data_1d(123, 80)
+
+
+        nn.train(inputs, truths, 20000, 0.01)
         nn.test(inputs, truths, test_inputs, test_truths)
         nn.show_loss()
 

@@ -23,7 +23,7 @@ def generate_data_3d(seed, number):
     return inputs, truths
 
 
-def generate_data_1d(seed, number, option=None): ##fix dimension
+def generate_data_1d(seed, number, option=None):
     """Generate 1d data set for different types."""
 
     np.random.seed(seed)
