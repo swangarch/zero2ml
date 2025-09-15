@@ -21,7 +21,6 @@ to understand how classic ML models work internally.
 - [x] Linear Regression (main algo with Rust)  
 - [x] Logistic Regression
 - [x] Neural Network
-- [ ] Multilayer Perceptron (planned)
 - [ ] More to come... 🚀
 
 
@@ -100,7 +99,7 @@ This project also includes a data science part with analysis and visualization t
      ```  
    - Takes a CSV dataset with labeled classes.  
    - Trains the logistic regression model using gradient descent.  
-   - Saves the trained weights into `data/weights.txt`.  
+   - Saves the trained weights into `output/weights.txt`.  
 
 3. **Predictor**  
    - Usage:  
