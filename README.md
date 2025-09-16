@@ -36,7 +36,7 @@ bash venv.sh
 source venv/bin/activate
 ```
 
-Note: The projects were developed on Ubuntu.
+Note: The projects were developed on linux (ubuntu).
 If you are using WSL, some visualization scripts may not work properly due to the lack of GUI support.
 
 
@@ -56,6 +56,7 @@ Main topics include:
 
 This module builds the foundation for later machine learning projects.  
 👉 [The full “Python for Data Science” repo](https://github.com/swangarch/python_piscine)
+
 
 
 ### 1. Linear Regression ✅
