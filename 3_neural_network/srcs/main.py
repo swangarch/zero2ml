@@ -12,7 +12,7 @@ def test0():
     inputs, truths = generate_data_1d(142, 200, 5)
     test_inputs, test_truths = generate_data_1d(123, 50)
 
-    nn.train(inputs, truths, 40000, 0.01, batch_size=20)
+    nn.train(inputs, truths, 40000, 0.01, batch_size=20, animation="plot")
     nn.test(inputs, truths, test_inputs, test_truths)
     nn.show_loss()
 
@@ -40,7 +40,7 @@ def test2():
     inputs, truths = generate_data_3d(142, 500)
     test_inputs, test_truths = generate_data_3d(123, 80)
 
-    nn.train(inputs, truths, 20000, 0.005)
+    nn.train(inputs, truths, 20000, 0.005, animation="scatter")
     nn.test(inputs, truths, test_inputs, test_truths)
     nn.show_loss()
 

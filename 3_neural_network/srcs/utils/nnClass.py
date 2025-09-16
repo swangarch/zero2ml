@@ -143,6 +143,7 @@ class NN:
         print()
         print("[TRAINING DONE]")
         self.plt.ioff()
+        self.plt.show()
         self.plt.close()
 
 
@@ -156,17 +157,30 @@ class NN:
         plt.close()
 
 
-    def test_animation(self, test_inputs, test_truths):
+    def test_animation(self, test_inputs, test_truths, animation):
         """Test for a new dataset."""
 
         test_result = self.inference(test_inputs)
         self.plt.clf()
-        self.plt.scatter(test_inputs[:, 0], np.array(test_truths)[:, 0], c="blue", label="Truth", s=5)
-        self.plt.scatter(test_inputs[:, 0], np.array(test_result)[:, 0], c="red", label="Prediction", s=5)
+        inputs = test_inputs[:, 0].flatten()
+        truths = np.array(test_truths)[:, 0].flatten()
+        outputs = np.array(test_result)[:, 0].flatten()
+        
+        sorted_index = np.argsort(inputs)
+        inputs_sorted = inputs[sorted_index]
+        truths_sorted = truths[sorted_index]
+        outputs_sorted = outputs[sorted_index]
+
+        self.plt.scatter(inputs_sorted, truths_sorted, c="blue", label="Truth", s=10)
+        if animation == "plot":
+            self.plt.plot(inputs_sorted, outputs_sorted, c="red", label="Prediction", lw=1)
+        elif animation == "scatter":
+            self.plt.scatter(inputs_sorted, outputs_sorted, c="red", label="Prediction", s=10)
+        else:
+            raise TypeError("Wrong animation type")
         self.plt.legend(loc="lower left")
         self.plt.pause(0.1)
-        self.plt.show()
-
+        
 
     def show_record(self, epoch, inputs_train, inputs_test, truths_train, truths_test, startTime, animation): #return a boolean to determine if training continue
         """Show and record the loss"""
@@ -182,8 +196,8 @@ class NN:
                 self.graph_loss_test.append(loss_test)
             self.graph_epoch.append(epoch)
 
-            if animation == True and epoch % 50 == 0:
-                self.test_animation(inputs_test[:50], truths_test[:50])
+            if animation is not None and epoch % 50 == 0:
+                self.test_animation(inputs_test[:50], truths_test[:50], animation)
             if epoch % 100 == 0:
                 time = str(datetime.now() - startTime).split(".")[0]
                 print(f"\033[?25l[EPOCH] {epoch}  [LOSS_TRAIN] {loss_train:8f} [LOSS_TEST] {loss_test:8f}  [TIME] {time}\033[?25l", end="\r")
