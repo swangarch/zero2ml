@@ -18,13 +18,52 @@ to understand how classic ML models work internally.
 
 ## 📌 Current Progress
 
+- [x] Python for data science
 - [x] Linear Regression (main algo with Rust)  
 - [x] Logistic Regression
 - [x] Neural Network
 - [ ] More to come... 🚀
 
 
+## 📌 Requirements
+
+These projects are mainly built with Python, while a few use Rust. Therefore, some dependencies are required.  
+
+Each project includes a `venv.sh` and `requirements.txt` to help you set up a virtual environment and install the necessary packages:  
+
+```bash
+bash venv.sh
+source venv/bin/activate
+```
+
+Note: The projects were developed on Ubuntu.
+If you are using WSL, some visualization scripts may not work properly due to the lack of GUI support.
+
+
+## 📌 Projects
+
+### 0. Python for Data Science ✅
+
+This module is part of the 42 curriculum (“Python for Data Science”) and is designed to introduce Python in the context of data science.  
+It covers the fundamentals of Python programming and gradually applies them to data processing and analysis tasks.  
+
+Main topics include:  
+- Python basics: syntax, data structures, control flow, and package management  
+- Arrays and matrix operations, as well as image manipulation exercises using NumPy  
+- Data processing and visualization (e.g., CSV handling, plotting) with Pandas and Matplotlib  
+- Functional and object-oriented programming with modular design and inheritance
+- Exploring statistics, and advanced Python features such as decorators and closures
+
+This module builds the foundation for later machine learning projects.  
+👉 [The full “Python for Data Science” repo](https://github.com/swangarch/python_piscine)
+
+
 ### 1. Linear Regression ✅
+
+The goal of this project is to predict car prices based on their mileage, as these two factors have a linear correlation.
+As an introduction to machine learning, gradient descent is used to minimize the loss function (MSE) in order to find the 
+appropriate values of θ₀ and θ₁. These two parameters are updated simultaneously during the process, allowing the loss 
+function to descend in the steepest direction.
 
 Linear regression is implemented with three programs, main algorithm is implemented with Rust, visualizer with python:
 
@@ -108,10 +147,8 @@ This project also includes a data science part with analysis and visualization t
      ```  
    - Loads trained weights from `weights.txt`.  
    - Predicts class probabilities for given test samples.  
-   - Outputs predicted class (0 or 1).
+   - Outputs predicted class csv.
    - One-vs-all tasks with multi models training.
-
-
 ---
 
 ### 3. Neural Network ✅
@@ -173,7 +210,6 @@ if __name__ == "__main__":
 ```
 
 ![Regression demo](visualization/3_nn/prediction.jpg)
-
 
 ---
 
