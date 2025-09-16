@@ -3,8 +3,7 @@
 **zero2ml** is a **practice project** to learn machine learning **from zero**,  
 by re-implementing fundamental machine learning algorithms.
 
-The purpose of this repository is **educational**:  
-to understand how classic ML models work internally.
+The purpose of this repository is to understand how classic ML models work internally.
 
 ---
 
