@@ -70,28 +70,32 @@ Linear regression is implemented with three programs, main algorithm is implemen
 #### Methodology
 
 Linear regression is one of the most fundamental algorithms in machine learning. The idea is to model the relationship between an input variable (mileage) and an output variable (price) with a straight line:
+
 $$
 \hat{y} = \theta_0 + \theta_1 x
 $$
+
 where $\hat{y}$ is the predicted car price, $x$ is the mileage, and $\theta_0, \theta_1$ are parameters to be learned.
 
-##### Regression:
+#### Regression:
 
 The regression problem can be seen as finding the best-fitting line that minimizes the difference between the predicted values $\hat{y}$ and the true values $y$.
 
-##### Normalization:
+#### Normalization:
 
 Since features may vary in scale, normalization ensures that all input data are on a comparable range. This speeds up convergence during gradient descent and prevents one feature from dominating the others.
 
-##### Loss function(Mean Squared Error, MSE):
+#### Loss function(Mean Squared Error, MSE):
 
 The loss function measures how well our line fits the data:
+
 $$
 J(\theta_0, \theta_1) = \frac{1}{2m}\sum_{i=1}^m \big(\hat{y}^{(i)} - y^{(i)}\big)^2
 $$
+
 where $m$ is the number of training examples. The goal is to minimize this loss.
 
-### Gradient Derivation (using the Chain Rule)
+#### Gradient Derivation (using the Chain Rule)
 
 We want to compute the gradient of the loss with respect to each parameter.  
 
@@ -195,7 +199,7 @@ Similar to linear regression, logistic regression uses gradient descent to minim
 
 For multi-class classification, we extend the binary case using the one-vs-all approach.
 
-##### Loss function(Cross Entropy Loss):
+#### Loss function(Cross Entropy Loss):
 
 $$
 J(\theta) = -\frac{1}{m} \sum_{i=1}^m 
@@ -208,13 +212,13 @@ $$
 h_\theta(x) = g(\theta^T x)
 $$
 
-##### Sigmoid Function:
+#### Sigmoid Function:
 
 $$
 g(z) = \frac{1}{1+e^{-z}}
 $$
 
-##### Gradient of the Loss Function
+#### Gradient of the Loss Function
 Using the chain rule, the partial derivative with respect to each parameter (both weights and bias) can be derived. Collectively, these partial derivatives form the gradient:
 
 $$
