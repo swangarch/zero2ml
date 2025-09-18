@@ -219,10 +219,9 @@ g(z) = \frac{1}{1+e^{-z}}
 $$
 
 #### Gradient of the Loss Function
-Using the chain rule, the partial derivative with respect to each parameter (both weights and bias) can be derived. Collectively, these partial derivatives form the gradient:
 
 Using the chain rule, the partial derivative with respect to each parameter (both weights and bias) can be derived.  
-The result is analogous to linear regression, with the difference that the hypothesis function uses the sigmoid activation:
+The result is similar to linear regression, with the difference that the hypothesis function uses the sigmoid activation:
 
 $$
 \frac{\partial J}{\partial \theta_j} 
@@ -236,11 +235,7 @@ $$
 h_\theta(x^{(i)}) = \sigma(\theta^T x^{(i)}) 
 $$
 
-and
-
-$\sigma(z) = \frac{1}{1+e^{-z}}$ 
-
-is the sigmoid function.
+and $\sigma(z) = \frac{1}{1+e^{-z}}$ is the sigmoid function.
 
 ---
 
