@@ -221,95 +221,26 @@ $$
 #### Gradient of the Loss Function
 Using the chain rule, the partial derivative with respect to each parameter (both weights and bias) can be derived. Collectively, these partial derivatives form the gradient:
 
-We start from the loss function (cross-entropy) for logistic regression:
-
-$$
-J(\theta) = -\frac{1}{m} \sum_{i=1}^m 
-\Big[ y^{(i)} \log\big(h_\theta(x^{(i)})\big) + (1-y^{(i)})\log\big(1-h_\theta(x^{(i)})\big) \Big]
-$$
-
-where
-
-$$
-h_\theta(x^{(i)}) = g(\theta^T x^{(i)}), \quad 
-g(z) = \frac{1}{1+e^{-z}}
-$$
-
----
-
-**Step 1. Differentiate the loss for a single sample**
-
-For one training example $(x^{(i)}, y^{(i)})$, the loss is
-
-$$
-L^{(i)} = -\Big[ y^{(i)} \log(h_\theta(x^{(i)})) + (1-y^{(i)}) \log(1-h_\theta(x^{(i)})) \Big]
-$$
-
-Differentiate w.r.t. $h_\theta(x^{(i)})$:
-
-$$
-\frac{\partial L^{(i)}}{\partial h_\theta(x^{(i)})} 
-= -\frac{y^{(i)}}{h_\theta(x^{(i)})} + \frac{1-y^{(i)}}{1-h_\theta(x^{(i)})}
-$$
-
----
-
-**Step 2. Differentiate $h_\theta(x^{(i)})$ with respect to $z = \theta^T x^{(i)}$**
-
-Since $h_\theta(x) = g(z)$ with $g(z) = \frac{1}{1+e^{-z}}$,  
-
-$$
-\frac{d h_\theta(x^{(i)})}{dz} = h_\theta(x^{(i)})(1-h_\theta(x^{(i)}))
-$$
-
----
-
-**Step 3. Apply the chain rule**
-
-$$
-\frac{\partial L^{(i)}}{\partial z} 
-= \frac{\partial L^{(i)}}{\partial h_\theta(x^{(i)})} \cdot \frac{d h_\theta(x^{(i)})}{dz}
-$$
-
-Substitute results from Step 1 and 2:
-
-$$
-\frac{\partial L^{(i)}}{\partial z} 
-= \Big(-\frac{y^{(i)}}{h_\theta(x^{(i)})} + \frac{1-y^{(i)}}{1-h_\theta(x^{(i)})}\Big) 
-\cdot h_\theta(x^{(i)})(1-h_\theta(x^{(i)}))
-$$
-
-Simplify:
-
-$$
-\frac{\partial L^{(i)}}{\partial z} = h_\theta(x^{(i)}) - y^{(i)}
-$$
-
----
-
-**Step 4. Gradient with respect to parameters $\theta_j$**
-
-Since $z = \theta^T x^{(i)} = \sum_j \theta_j x_j^{(i)}$,
-
-$$
-\frac{\partial z}{\partial \theta_j} = x_j^{(i)}
-$$
-
-Thus,
-
-$$
-\frac{\partial L^{(i)}}{\partial \theta_j} 
-= \big(h_\theta(x^{(i)}) - y^{(i)}\big) x_j^{(i)}
-$$
-
----
-
-**Step 5. Average over all $m$ samples**
+Using the chain rule, the partial derivative with respect to each parameter (both weights and bias) can be derived.  
+The result is analogous to linear regression, with the difference that the hypothesis function uses the sigmoid activation:
 
 $$
 \frac{\partial J}{\partial \theta_j} 
-= \frac{1}{m} \sum_{i=1}^m \big(h_\theta(x^{(i)}) - y^{(i)}\big)x_j^{(i)}
+= \frac{1}{m} \sum_{i=1}^m \big(h_\theta(x^{(i)}) - y^{(i)}\big)x_j^{(i)}, 
+\quad j = 0, 1, \dots, n
 $$
+
+where 
+
+$$ 
+h_\theta(x^{(i)}) = \sigma(\theta^T x^{(i)}) 
+$$
+
+and
+
+$\sigma(z) = \frac{1}{1+e^{-z}}$ 
+
+is the sigmoid function.
 
 ---
 
