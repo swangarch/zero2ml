@@ -289,14 +289,18 @@ The design goal is to provide a reusable and modular implementation.
 
 #### 📖 Features
 
-  0. Algorithm implemented from scratch, only use numpy for matrix multiplication.
-  1. SGD, mini-batch training.
-  2. Real-time animations.
-  3. Ajustable net shape, activation functions, max_iter, learning_rate, batch_size etc.
-  4. Data loading and preprocessing.
+Algorithm from scratch → implemented without high-level ML libraries, only using NumPy for matrix operations.
+
+Training methods → supports Stochastic Gradient Descent (SGD) and mini-batch training.
+
+Visualization → includes real-time animations to track the learning process.
+
+Configurable architecture → adjustable network shape, activation functions, max iterations, learning rate, batch size, etc.
+
+Data handling → built-in data loading and preprocessing pipeline.
 
 #### 📖 Programs - Train and Predict
-  To use the script, you need to install numpy and matplotlib, venv.sh is provided to simplify this. We recommand you to use --help before the first usage.
+  Before started, you need to install numpy, matplotlib, pandas, venv.sh is provided to simplify this. We recommand you to use --help before the first usage.
 
   Note: The load datacsv for regression tasks is still in progress, a test case is currently provided. An json config file to pass network structure is planned in the future.
 
@@ -307,7 +311,7 @@ The design goal is to provide a reusable and modular implementation.
     Options:
 
       --classification-data:  csv_data need to be provided.
-      --regression-test:  no csv_data needed, a random generated data will beused.
+      --regression-test:  no csv_data needed, a random generated data will be used.
       --help:  Show help messages.
       --More features to come.
 
@@ -316,6 +320,7 @@ The design goal is to provide a reusable and modular implementation.
      python mlp.py --classification-data ../data.csv
      ```
 
+The program will:
 Defines the network structure (layers, activation functions).  
 Trains using backpropagation and gradient descent.  
 Visualize loss and prediction:
