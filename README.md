@@ -287,32 +287,7 @@ Neural Network is implemented as an encapsulated class in Python,
 capable of solving both regression and classification tasks.  
 The design goal is to provide a reusable and modular implementation.
 
-#### 📖 Programs  
-
-1. **Train and Predict**
-  Current neural network can perform both classification and regression tasks.
-  The load datacsv for regression tasks is still in progress, a test case is currently provided.
-  An json config file to pass network structure is planned.
-
-  Usage:
-    python  mlp.py  <--options>  <data_optional>
-  Options:
-    --classification-data:  csv_data need to be provided.
-    --regression-test:  no csv_data needed, a random generated data will beused.
-    --help:  Show help messages.
-    --More features to come.
-
-   - example:  
-     ```bash
-     python mlp.py --classification-data ../data.csv
-     ```  
-   - Defines the network structure (layers, activation functions).  
-   - Trains using backpropagation and gradient descent.  
-   - Visualize loss and prediction:
-     By default, regression task will visualize the loss, and the data distribution for first dimension.
-     In addition, classification task will add an accuracy plot.
-     
-2. **Features**
+#### 📖 Features
 
   0. Algorithm implemented from scratch, only use numpy for matrix multiplication.
   1. SGD, mini-batch training.
@@ -320,9 +295,59 @@ The design goal is to provide a reusable and modular implementation.
   3. Ajustable net shape, activation functions, max_iter, learning_rate, batch_size etc.
   4. Data loading and preprocessing.
 
-3. **Class example** 
+#### 📖 Programs - Train and Predict
+  To use the script, you need to install numpy and matplotlib, venv.sh is provided to simplify this. We recommand you to use --help before the first usage.
 
-#### 📘 Example: Train and Test a Neural Network
+  Note: The load datacsv for regression tasks is still in progress, a test case is currently provided. An json config file to pass network structure is planned in the future.
+
+    Usage:
+
+      python  mlp.py  <--options>  <data_optional>
+
+    Options:
+
+      --classification-data:  csv_data need to be provided.
+      --regression-test:  no csv_data needed, a random generated data will beused.
+      --help:  Show help messages.
+      --More features to come.
+
+   example:  
+     ```bash
+     python mlp.py --classification-data ../data.csv
+     ```
+
+Defines the network structure (layers, activation functions).  
+Trains using backpropagation and gradient descent.  
+Visualize loss and prediction:
+  By default, regression task will visualize the loss, and the data distribution for first dimension.
+  In addition, classification task will add an accuracy plot.
+
+#### Demo
+The example graph on both classification and regression.
+
+![Demo](visualization/3_nn/demo.png)
+
+#### Dataset
+
+A dataset is provided in this repository, corresponding to breast cancer diagnosis classification.
+It contains 32 columns, where the diagnosis column is the label to predict. The label can take two values:
+
+M → Malignant (cancerous)
+
+B → Benign (non-cancerous)
+
+The remaining 30 numerical features describe various characteristics of a cell nucleus extracted with fine-needle aspiration (FNA), such as radius, texture, perimeter, area, and smoothness. These measurements are widely used for early breast cancer detection.
+
+For this project:
+
+It is split into two parts: one for training and one for validation/testing.
+
+The objective is to build a classification algorithm that predicts whether a tumor is malignant or benign based on the given features.
+
+
+#### 📖 Class 
+
+Example: Train and Test a Neural Network
 
 Below is a simple example of using the `NN` class to train a regression model.
 
@@ -359,9 +384,11 @@ if __name__ == "__main__":
     main()
 ```
 
-![Regression demo](visualization/3_nn/prediction.jpg)
+#### 📖 Generalization
 
-3. **Future improvements**
+The figure shows that neural networks are capable of learning non-linear patterns from different datasets and can generalize beyond the training data, making them applicable to a wide range of tasks.
+
+![Regression demo](visualization/3_nn/prediction.jpg)
 
 ---
 
