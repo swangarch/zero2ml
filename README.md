@@ -289,26 +289,46 @@ The design goal is to provide a reusable and modular implementation.
 
 #### 📖 Programs  
 
-1. **Train and Predict**  
-   - Usage:  
+1. **Train and Predict**
+  Current neural network can perform both classification and regression tasks.
+  The load datacsv for regression tasks is still in progress, a test case is currently provided.
+  An json config file to pass network structure is planned.
+
+  Usage:
+    python  mlp.py  <--options>  <data_optional>
+  Options:
+    --classification-data:  csv_data need to be provided.
+    --regression-test:  no csv_data needed, a random generated data will beused.
+    --help:  Show help messages.
+    --More features to come.
+
+   - example:  
      ```bash
-     python main.py
+     python mlp.py --classification-data ../data.csv
      ```  
    - Defines the network structure (layers, activation functions).  
    - Trains using backpropagation and gradient descent.  
-   - Visualize loss and prediction.  
+   - Visualize loss and prediction:
+     By default, regression task will visualize the loss, and the data distribution for first dimension.
+     In addition, classification task will add an accuracy plot.
+     
+2. **Features**
 
+  0. Algorithm implemented from scratch, only use numpy for matrix multiplication.
+  1. SGD, mini-batch training.
+  2. Real-time animations.
+  3. Ajustable net shape, activation functions, max_iter, learning_rate, batch_size etc.
+  4. Data loading and preprocessing.
 
-2. **Class example** 
+3. **Class example** 
 
 #### 📘 Example: Train and Test a Neural Network
 
 Below is a simple example of using the `NN` class to train a regression model.
 
 ```python
-from utils.activation_func import relu, sigmoid
-from utils.data_generation import generate_data_1d
-from utils.nnClass import NN
+from Neural_network import NN, relu, generate_data_rand
+from Data_process import load, preprocess_data
 
 
 def main():
@@ -321,15 +341,15 @@ def main():
         nn = NN(net_shape, activation_funcs)
 
         # Generate training data
-        inputs, truths = generate_data_1d(142, 100)
-        nn.train(inputs, truths, max_iter=20000, learning_rate=0.05)
+        inputs, truths = generate_data_rand(142, 500, 0.02)
+        test_inputs, test_truths = generate_data_rand(123, 50, 0.02)
+        nn.train(inputs, truths, 10000, 0.005, batch_size=20, animation="plot")
 
         # Test with new data
-        test_inputs, test_truths = generate_data_1d(123, 80)
-        nn.test(test_inputs, test_truths)
+        nn.test(inputs, truths, test_inputs, test_truths)
 
-        # Show loss curve
-        nn.show_loss()
+        # Save graphs
+        nn.save_plots()
 
     except Exception as e:
         print("Error:", e)
@@ -340,6 +360,8 @@ if __name__ == "__main__":
 ```
 
 ![Regression demo](visualization/3_nn/prediction.jpg)
+
+3. **Future improvements**
 
 ---
 

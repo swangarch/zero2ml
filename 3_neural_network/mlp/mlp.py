@@ -5,7 +5,7 @@ import sys
 
 def print_help():
     print("-------------------------------------------------------------")
-    print("Multilayer perceptron()")
+    print("Multilayer perceptron")
     print("Usage:")
     print("   python  mlp.py  <--options>  <data(optional)>")
     print("Options:")
@@ -21,10 +21,8 @@ def test_regression_noise():
     activation_funcs = (relu, relu, None)
 
     nn = NN(net_shape, activation_funcs)
-
     inputs, truths = generate_data_rand(142, 500, 0.02)
     test_inputs, test_truths = generate_data_rand(123, 50, 0.02)
-
     nn.train(inputs, truths, 10000, 0.005, batch_size=20, animation="plot")
     nn.test(inputs, truths, test_inputs, test_truths)
     nn.save_plots()
@@ -35,9 +33,7 @@ def classification(inputs, truths):
     activation_funcs = (relu, relu, sigmoid)
 
     nn = NN(net_shape, activation_funcs, classification=True)
-
     inputs_train, truths_train, inputs_test, truths_test = split_dataset(inputs, truths)
-
     nn.train(inputs_train, truths_train, 10000, 0.001, batch_size=20, animation="scatter")
     nn.test(inputs, truths, inputs_test, truths_test)
     nn.save_plots()
