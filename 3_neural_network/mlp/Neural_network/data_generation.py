@@ -58,5 +58,27 @@ def generate_data_1d(seed, number, option=None):
     return inputs, truths
 
 
+def generate_data_rand(seed, number, noise_scale=0.2):
+    """Generate 1d data based on case 5 with added random noise."""
+
+    np.random.seed(seed)
+    inputs = []
+    truths = []
+
+    for _ in range(number):
+        x = np.random.rand()  # 输入在 [0,1]
+        inputs.append(np.array([x]).reshape(-1, 1))
+
+        y = 0.5 * x**2 + 0.3 * np.sin(2 * np.pi * x)
+
+        noise = np.random.normal(0, noise_scale)
+        y_noisy = y + noise
+
+        truths.append(np.array([float(y_noisy)]).reshape(-1, 1))
+
+    inputs = np.array(inputs)
+    truths = np.array(truths)
+    return inputs, truths
+
 
     

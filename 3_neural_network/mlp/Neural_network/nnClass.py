@@ -1,6 +1,7 @@
 import numpy as np
-from utils.activation_func import *
-from utils.nnUtils import *
+# import cupy as np
+from .activation_func import *
+from .nnUtils import *
 import matplotlib.pyplot as plt
 from datetime import datetime
 import os
@@ -9,7 +10,7 @@ import os
 class NN:
     """Neural network class, which can perform training and prediction"""
 
-    def __init__(self, shape, activation_functions):
+    def __init__(self, shape, activation_functions, classification=False):
         """Init a multi layer perceptron."""
         
         if len(shape) < 4:
@@ -31,6 +32,8 @@ class NN:
 
         self.graph_loss_train = []
         self.graph_loss_test = []
+        self.graph_acc_train = []
+        self.graph_acc_test = []
         self.graph_epoch = []
 
         self.loss_threshold = 0.000000001
@@ -41,6 +44,8 @@ class NN:
         self.deriv_map = dict()
         self.deriv_map[relu] = relu_deriv
         self.deriv_map[sigmoid] = sigmoid_deriv
+
+        self.classification = classification
 
 
     def check_train_params(self, inputs, truths):
@@ -64,15 +69,15 @@ class NN:
             actives.append(forward_layer(self.nets[i], actives[i], self.biases[i], self.activ_funcs[i]))
         # -----------------------------forward end-----------------------------
         # -----------------------------back probab --------------------------------
-        diff = (actives[-1] - truths_batch) * activ_deriv(self.activ_funcs[-1], actives[-1], self.deriv_map) # last layer difference
-        Bgrads.append(np.mean(diff, axis=1, keepdims=True))
-        Wgrads.append(diff @ actives[-2].T / len(inputs))
+        local_grad = (actives[-1] - truths_batch) * activ_deriv(self.activ_funcs[-1], actives[-1], self.deriv_map) # last layer difference
+        Bgrads.append(np.mean(local_grad, axis=1, keepdims=True))
+        Wgrads.append(local_grad @ actives[-2].T / len(inputs))
     
         for i in range(self.len_nets - 1, 0, -1):
-            loss_prev_layer = self.nets[i].T @ diff  #cal the loss of prev layer
-            diff = loss_prev_layer * activ_deriv(self.activ_funcs[i - 1], actives[i], self.deriv_map) 
-            Bgrads.append(np.mean(diff, axis=1, keepdims=True))
-            Wgrads.append(diff @ actives[i - 1].T / len(inputs))
+            loss_prev_layer = self.nets[i].T @ local_grad  #cal the loss of prev layer
+            local_grad = loss_prev_layer * activ_deriv(self.activ_funcs[i - 1], actives[i], self.deriv_map) 
+            Bgrads.append(np.mean(local_grad, axis=1, keepdims=True))
+            Wgrads.append(local_grad @ actives[i - 1].T / len(inputs))
         # -----------------------------back probab end-----------------------------
         gradient_descent(self.nets, self.biases, Wgrads[::-1], Bgrads[::-1], learning_rate)
 
@@ -90,15 +95,15 @@ class NN:
     #             self.actives[i + 1] = forward_layer(self.nets[i], self.actives[i], self.biases[i], self.activ_funcs[i])
     #         # -----------------------------forward end-----------------------------
     #         # -----------------------------back probab --------------------------------
-    #         diff = (self.actives[-1] - truths[i_data] ) * activ_deriv(self.activ_funcs[-1], self.actives[-1], self.deriv_map) # last layer difference
-    #         self.Bgrads[-1] += diff
-    #         self.Wgrads[-1] += diff @ self.actives[-2].T
+    #         local_grad = (self.actives[-1] - truths[i_data] ) * activ_deriv(self.activ_funcs[-1], self.actives[-1], self.deriv_map) # last layer local_graderence
+    #         self.Bgrads[-1] += local_grad
+    #         self.Wgrads[-1] += local_grad @ self.actives[-2].T
         
     #         for i in range(self.len_nets - 1, 0, -1): #exclude index == 0
-    #             loss_prev_layer = self.nets[i].T @ diff  #cal the loss of prev layer
-    #             diff = loss_prev_layer * activ_deriv(self.activ_funcs[i - 1], self.actives[i], self.deriv_map) 
-    #             self.Bgrads[i - 1] += diff
-    #             self.Wgrads[i - 1] += diff @ self.actives[i - 1].T
+    #             loss_prev_layer = self.nets[i].T @ local_grad  #cal the loss of prev layer
+    #             local_grad = loss_prev_layer * activ_deriv(self.activ_funcs[i - 1], self.actives[i], self.deriv_map) 
+    #             self.Bgrads[i - 1] += local_grad
+    #             self.Wgrads[i - 1] += local_grad @ self.actives[i - 1].T
     #         # -----------------------------back probab end-----------------------------
     #     num_data = len(inputs)
     #     for i in range(self.len_nets):
@@ -119,7 +124,7 @@ class NN:
         return result
 
 
-    def train(self, inputs, truths, max_iter=10000, learning_rate=0.01, batch_size=20, visualize=True, test_ratio = 0.8, threshold=None, animation=False):
+    def train(self, inputs, truths, max_iter=10000, learning_rate=0.01, batch_size=20, visualize=True, test_ratio = 0.8, threshold=None, animation=None):
         """Train a dataset."""
 
         self.check_train_params(inputs, truths)
@@ -176,6 +181,8 @@ class NN:
             self.plt.plot(inputs_sorted, outputs_sorted, c="red", label="Prediction", lw=1)
         elif animation == "scatter":
             self.plt.scatter(inputs_sorted, outputs_sorted, c="red", label="Prediction", s=10)
+        elif animation is None:
+            pass
         else:
             raise TypeError("Wrong animation type")
         self.plt.legend(loc="lower left")
@@ -191,16 +198,32 @@ class NN:
             loss_train = loss(mse_loss, truths_train, predicts_train)
             loss_test = loss(mse_loss, truths_test, predicts_test)
 
+            # if classification == True:
+            predicts_train = np.array(predicts_train, dtype=np.float32)
+            predicts_test = np.array(predicts_test, dtype=np.float32)
+            predict_train_class = (predicts_train >= 0.5).astype(np.int32)
+            predict_test_class = (predicts_test >= 0.5).astype(np.int32)
+            acc_train = accuracy_1d(truths_train, predict_train_class)
+            acc_test = accuracy_1d(truths_test, predict_test_class)
+
+
             if loss_train < 1 and loss_test < 1:
                 self.graph_loss_train.append(loss_train)
                 self.graph_loss_test.append(loss_test)
             self.graph_epoch.append(epoch)
 
+            if self.classification == True:
+                self.graph_acc_train.append(acc_train)
+                self.graph_acc_test.append(acc_test)
+
             if animation is not None and epoch % 50 == 0:
                 self.test_animation(inputs_test[:50], truths_test[:50], animation)
             if epoch % 100 == 0:
                 time = str(datetime.now() - startTime).split(".")[0]
-                print(f"\033[?25l[EPOCH] {epoch}  [LOSS_TRAIN] {loss_train:8f} [LOSS_TEST] {loss_test:8f}  [TIME] {time}\033[?25l", end="\r")
+                if self.classification == False:
+                    print(f"\033[?25l[EPOCH] {epoch}  [LOSS_TRAIN] {loss_train:8f} [LOSS_TEST] {loss_test:8f}  [TIME] {time}\033[?25h", end="\r")
+                else:
+                    print(f"\033[?25l[EPOCH] {epoch}  [LOSS_TRAIN] {loss_train:8f} [LOSS_TEST] {loss_test:8f} [ACC_TRAIN] {acc_train:5f} [ACC_TEST] {acc_test:5f} [TIME] {time}\033[?25h", end="\r")
 
             if self.loss_train  is not None and self.loss_test is not None:
                 if abs(self.loss_train - loss_train) < self.loss_threshold and abs(self.loss_test - loss_test) < self.loss_threshold:
@@ -212,14 +235,30 @@ class NN:
         return False
 
 
-    def show_loss(self):
+    def save_plots(self):
         """Show loss func."""
 
-        plt.plot(self.graph_epoch, self.graph_loss_train, c="cyan", lw=0.5, label="Training loss")
-        plt.plot(self.graph_epoch, self.graph_loss_test, c="orange", lw=0.5, label="Test loss")
+        plt.plot(self.graph_epoch, self.graph_loss_train, c="cyan", lw=1, label="Training loss")
+        plt.plot(self.graph_epoch, self.graph_loss_test, c="orange", linestyle="--", lw=1, label="Test loss")
+        plt.grid(True, linestyle="--", linewidth=0.7, alpha=0.7)
+        plt.title("Loss Curves")
+        plt.xlabel("Epochs")
+        plt.ylabel("Loss")
         plt.legend(loc="upper right")
         plt.savefig("visualize/loss.png", dpi=300, bbox_inches='tight')
         plt.close()
+
+        if self.classification == True:
+            plt.plot(self.graph_epoch, self.graph_acc_train, c="cyan", lw=1, label="Training accuracy")
+            plt.plot(self.graph_epoch, self.graph_acc_test, c="orange", linestyle="--", lw=1, label="Test accuracy")
+            plt.grid(True, linestyle="--", linewidth=0.7, alpha=0.7)
+            plt.title("Learning Curves")
+            plt.xlabel("Epochs")
+            plt.ylabel("Accuracy")
+            plt.legend(loc="lower right")
+            plt.savefig("visualize/accuracy.png", dpi=300, bbox_inches='tight')
+            plt.close()
+            print("Saved")
 
 
     def prepare(self, visualize, threshold):
