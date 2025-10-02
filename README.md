@@ -9,7 +9,7 @@ The purpose of this repository is to understand how classic ML models work inter
 
 ## ✨ Highlights
 
-- **From Zero** → no external ML frameworks, everything implemented from scratch  
+- **From Zero** → Starting from no external ML frameworks, everything implemented from scratch
 - **Educational** → designed as a step-by-step learning exercise  
 - **Modularity** → designed as encapsulated classes, can be reused in different projects.
 
@@ -21,6 +21,7 @@ The purpose of this repository is to understand how classic ML models work inter
 - [x] Linear Regression (main algo with Rust)  
 - [x] Logistic Regression
 - [x] Neural Network
+- [x] Convolutional Neural Network (Implemented with Pytorch)
 - [ ] More to come... 🚀
 
 
@@ -281,9 +282,9 @@ and $\sigma(z) = \frac{1}{1+e^{-z}}$ is the sigmoid function.
    - One-vs-all tasks with multi models training.
 ---
 
-### 3. Neural Network ✅
+### 3. Multilayer Perceptron (Neural Network) ✅
 
-Neural Network is implemented as an encapsulated class in Python,  
+Multilayer Perceptron (Neural Network) is implemented as an encapsulated class in Python,  
 capable of solving both regression and classification tasks.  
 The design goal is to provide a reusable and modular implementation.
 
@@ -396,6 +397,12 @@ The figure shows that neural networks are capable of learning non-linear pattern
 ![Regression demo](visualization/3_nn/prediction.jpg)
 
 ---
+
+### 4. Convolutional Neural Network (CNN) ✅
+
+This project implements a simple Convolutional Neural Network (CNN) framework with PyTorch, to perform hand write digit recognition.
+
+[[CNN full repo]](https://github.com/swangarch/convolutional_neural_network)
 
 ## 🎯 Goal
 
