@@ -19,10 +19,12 @@ The purpose of this repository is to understand how classic ML models work inter
 
 - [x] Python for data science
 - [x] Linear Regression (main algo with Rust)  
-- [x] Logistic Regression
+- [x] Logistic Regression (One-vs-all approach)
 - [x] Multilayer Perceptron (Neural Network from Scratch)
 - [x] Convolutional Neural Network (Implemented with Pytorch)
-- [on going] Deep Q Neural Network
+- [x] Deep Q Neural Network (From Scratch with Numpy)
+- [On going] Resnet
+- [ ] Transformer
 - [ ] More to come... 
 
 
@@ -106,6 +108,16 @@ This project implements a simple Convolutional Neural Network (CNN) framework wi
 ![CNN demo](visualization/4_cnn/prediction.png)
 
 [[CNN repo]](https://github.com/swangarch/convolutional_neural_network)
+
+---
+
+### 5. Deep Q Network (DQN) ✅
+
+A reinforcement learning project that trains an AI agent to play the classic Snake game using a Deep Q-Network (DQN) implemented from scratch, only using numpy.
+
+![DQN demo](visualization/5_dqn/play.png)
+
+[[DQN repo]](https://github.com/swangarch/learn2slither)
 
 ---
 
